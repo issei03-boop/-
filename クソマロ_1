@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>今日の一語</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font-family: 'Yomogi', cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* 上部モード切替 */
+.mode {
+  position: absolute;
+  top: 20px;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* コンテナ */
+.container {
+  width: 90%;
+  max-width: 420px;
+}
+
+/* キーワード */
+.keyword {
+  font-size: 44px;
+  opacity: 0;
+  letter-spacing: 0.05em;
+}
+
+/* 詩的アニメーション */
+.keyword.animate {
+  animation: poeticMove 2.8s ease forwards;
+}
+
+@keyframes poeticMove {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(1.4);
+    filter: blur(6px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(0px) scale(1.3);
+    filter: blur(0px);
+  }
+  60% {
+    transform: translateY(-30px) scale(1.0);
+  }
+  100% {
+    transform: translateY(-90px) scale(0.65);
+  }
+}
+
+/* 解説 */
+.description {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 2;
+  opacity: 0;
+  filter: blur(4px);
+}
+
+/* 解説の詩的フェード */
+.description.show {
+  animation: poeticFade 3s ease forwards;
+  animation-delay: 1.2s;
+}
+
+@keyframes poeticFade {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* 下ヒント */
+.hint {
+  position: absolute;
+  bottom: 30px;
+  font-size: 12px;
+  opacity: 0.4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="mode" id="modeText">モード：今日の一語</div>
+
+<div class="container" onclick="showContent()">
+  <div id="keyword" class="keyword"></div>
+  <div id="description" class="description"></div>
+</div>
+
+<div class="hint">タップで切り替え</div>
+
+<script>
+// データ
+const data = [
+  {
+    keyword: "おまけつきタンポポ",
+    description: "綿毛の根元に「大吉」って書いてあったら嬉しいよね"
+  },
+  {
+    keyword: "存在論",
+    description: "存在とは何かを問う哲学の分野。"
+  },
+  {
+    keyword: "死別",
+    description: "不可逆的な分離。喪失によって意味が生まれる。"
+  }
+];
+
+// モード
+let mode = "today"; // today or random
+
+function getTodayIndex() {
+  const today = new Date();
+  return today.getDate() % data.length;
+}
+
+function showContent() {
+  const k = document.getElementById("keyword");
+  const d = document.getElementById("description");
+
+  k.classList.remove("animate");
+  d.classList.remove("show");
+
+  void k.offsetWidth;
+
+  let item;
+
+  if (mode === "today") {
+    item = data[getTodayIndex()];
+    mode = "random";
+    document.getElementById("modeText").textContent = "モード：ランダム";
+  } else {
+    item = data[Math.floor(Math.random() * data.length)];
+    mode = "today";
+    document.getElementById("modeText").textContent = "モード：今日の一語";
+  }
+
+  k.textContent = item.keyword;
+  d.textContent = item.description;
+
+  k.classList.add("animate");
+  d.classList.add("show");
+}
+
+// 初回表示
+showContent();
+</script>
+
+</body>
+</html>
